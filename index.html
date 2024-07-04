@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Redirect</title>
+    <script>
+        const adLinks = [
+            'https://ad-link1.com',
+            'https://ad-link2.com',
+            'https://ad-link3.com',
+            'https://ad-link4.com',
+            'https://ad-link5.com'
+        ];
+        const telegramLink = 'https://t.me/joinchat/your-private-channel-link';
+
+        function getRedirectIndex() {
+            let index = parseInt(getCookie('redirectIndex')) || 0;
+            return index;
+        }
+
+        function setRedirectIndex(index) {
+            setCookie('redirectIndex', index, 1);
+        }
+
+        function getCookie(name) {
+            let cookieArr = document.cookie.split(';');
+            for (let i = 0; i < cookieArr.length; i++) {
+                let cookiePair = cookieArr[i].split('=');
+                if (name === cookiePair[0].trim()) {
+                    return decodeURIComponent(cookiePair[1]);
+                }
+            }
+            return null;
+        }
+
+        function setCookie(name, value, days) {
+            let date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            let expires = "; expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + expires + "; path=/";
+        }
+
+        function redirectToNextLink() {
+            let index = getRedirectIndex();
+            if (index < adLinks.length) {
+                setRedirectIndex(index + 1);
+                window.location.href = adLinks[index];
+            } else {
+                setRedirectIndex(0);
+                window.location.href = telegramLink;
+            }
+        }
+
+        window.onload = redirectToNextLink;
+    </script>
+</head>
+<body>
+</body>
+</html>
