@@ -48,12 +48,11 @@
             if (document.referrer && adLinks.some(link => document.referrer.includes(link))) {
                 redirectToNextLink();
             }
-        };
-
-        window.onpopstate = function() {
-            // Prevent going back to previous pages and keep user in the redirection loop
-            history.pushState(null, null, location.href);
-            redirectToNextLink();
+            // Prevent going back to Telegram
+            window.onpopstate = function() {
+                history.pushState(null, null, location.href);
+                redirectToNextLink();
+            };
         };
     </script>
 </head>
