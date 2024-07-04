@@ -39,14 +39,14 @@
         }
 
         function startRedirection() {
-            setRedirectIndex(1);  // Reset index at the start
+            setRedirectIndex(0);  // Reset index at the start
             redirectToNextLink();
         }
 
         window.onload = function() {
             // This ensures that when the user comes back from an ad, they will be redirected again.
             window.onpageshow = function(event) {
-                if (event.persisted || (window.performance && window.performance.navigation.type == 3)) {
+                if (event.persisted || (window.performance || window.performance.navigation.type == 2)) {
                     redirectToNextLink();
                 }
             };
