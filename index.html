@@ -13,6 +13,7 @@
             "https://www.gaumon.com/search/label/Blogging"
         ];
         const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
+        const landingPage = 'index.html';
 
         function getRedirectIndex() {
             let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
@@ -46,7 +47,7 @@
         function disableBackButton() {
             history.pushState(null, null, location.href);
             window.onpopstate = function () {
-                history.go(1);
+                window.location.href = landingPage;
             };
         }
 
