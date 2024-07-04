@@ -38,23 +38,20 @@
             }
         }
 
-        function startRedirection() {
-            setRedirectIndex(0);  // Reset index at the start
-            redirectToNextLink();
-        }
-
         window.onload = function() {
-            // This ensures that when the user comes back from an ad, they will be redirected again.
-            window.onpageshow = function(event) {
-                if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                    redirectToNextLink();
-                }
-            };
+            document.getElementById('message').innerText = 'Wait for redirect...';
+            setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
+        };
+
+        window.onpageshow = function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                // Page was accessed via back button, redirect to index.html
+                window.location.href = 'index.html';
+            }
         };
     </script>
 </head>
 <body>
-    <h1>Welcome to the landing page!</h1>
-    <button onclick="startRedirection()">Join</button>
+    <h1 id="message">Welcome to the redirect page!</h1>
 </body>
 </html>
