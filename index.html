@@ -14,44 +14,22 @@
         ];
         const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
 
-        function getCookie(name) {
-            let cookieArr = document.cookie.split(";");
-
-            for (let i = 0; i < cookieArr.length; i++) {
-                let cookiePair = cookieArr[i].split("=");
-
-                if (name === cookiePair[0].trim()) {
-                    return decodeURIComponent(cookiePair[1]);
-                }
-            }
-
-            return null;
-        }
-
-        function setCookie(name, value, days) {
-            let date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            let expires = "; expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
         function getRedirectIndex() {
-            let index = parseInt(getCookie('redirectIndex')) || 0;
+            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
             return index;
         }
 
         function setRedirectIndex(index) {
-            setCookie('redirectIndex', index, 1);
+            localStorage.setItem('redirectIndex', index);
         }
 
         function clearRedirectIndex() {
-            setCookie('redirectIndex', '', -1);
+            localStorage.removeItem('redirectIndex');
         }
 
         function redirectToNextLink() {
             let index = getRedirectIndex();
             if (index < adLinks.length) {
-                setRedirectIndex(index + 1); // Increment index before redirecting
                 window.location.href = adLinks[index];
             } else {
                 clearRedirectIndex();
@@ -60,18 +38,17 @@
         }
 
         function startRedirection() {
-            setRedirectIndex(0);  // Reset index at the start
+            setRedirectIndex(1);  // Start with the first ad link
             redirectToNextLink();
         }
 
         window.onload = function() {
+            // This ensures that when the user comes back from an ad, they will be redirected again.
             window.onpageshow = function(event) {
                 if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                    // Check if referrer is an ad link
-                    let referrer = document.referrer;
-                    if (referrer && adLinks.some(link => referrer.includes(link))) {
-                        redirectToNextLink(); // Redirect to the next ad link
-                    }
+                    let index = getRedirectIndex();
+                    setRedirectIndex(index + 1);  // Move to the next ad link
+                    redirectToNextLink();
                 }
             };
         };
