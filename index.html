@@ -30,6 +30,7 @@
         function redirectToNextLink() {
             let index = getRedirectIndex();
             if (index < adLinks.length) {
+                setRedirectIndex(index + 1);
                 window.location.href = adLinks[index];
             } else {
                 clearRedirectIndex();
@@ -38,7 +39,7 @@
         }
 
         function startRedirection() {
-            setRedirectIndex(1);  // Start with the first ad link
+            setRedirectIndex(1);  // Reset index at the start
             redirectToNextLink();
         }
 
@@ -46,8 +47,6 @@
             // This ensures that when the user comes back from an ad, they will be redirected again.
             window.onpageshow = function(event) {
                 if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                    let index = getRedirectIndex();
-                    setRedirectIndex(index + 1);  // Move to the next ad link
                     redirectToNextLink();
                 }
             };
