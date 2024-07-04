@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Redirect</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f0f0;
+        }
+        #message {
+            font-size: 24px;
+            text-align: center;
+        }
+        button {
+            display: block;
+            margin: 20px auto;
+            padding: 10px 20px;
+            font-size: 18px;
+        }
+    </style>
     <script>
         const adLinks = [
             "https://www.gaumon.com",
@@ -38,26 +58,24 @@
         }
 
         function startRedirection() {
-            setRedirectIndex(0);  // Reset index at the start
+            setRedirectIndex(0);  // Start from the first ad link
             redirectToNextLink();
         }
 
         window.onload = function() {
             let index = getRedirectIndex();
-            // Redirect to next link only if coming back from an ad
             if (document.referrer && adLinks.some(link => document.referrer.includes(link))) {
                 redirectToNextLink();
             }
-            // Prevent going back to Telegram
+            // Ensure back button redirects to the next ad link
             window.onpopstate = function() {
-                history.pushState(null, null, location.href);
                 redirectToNextLink();
             };
         };
     </script>
 </head>
 <body>
-    <h1 id="message">Welcome to the landing page!</h1>
+    <div id="message">Welcome! Click the button below to join.</div>
     <button onclick="startRedirection()">Join</button>
 </body>
 </html>
