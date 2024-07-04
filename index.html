@@ -44,6 +44,17 @@
             redirectToNextLink();
         }
 
+        function handleBackButton() {
+            if (performance.navigation.type === 2) {
+                redirectToNextLink();
+            }
+        }
+
+        function init() {
+            disableBackButton(); // Disable back button functionality
+            handleBackButton(); // Handle redirection on back navigation
+        }
+
         function disableBackButton() {
             history.pushState(null, null, location.href);
             window.onpopstate = function () {
@@ -51,14 +62,7 @@
             };
         }
 
-        window.onload = function() {
-            disableBackButton(); // Disable back button functionality
-
-            // This ensures that when the user comes back from an ad, they will be redirected again.
-            if (performance.navigation.type === 2) {
-                redirectToNextLink();
-            }
-        };
+        window.onload = init;
     </script>
 </head>
 <body>
