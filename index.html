@@ -13,39 +13,34 @@
             "https://www.gaumon.com/search/label/Blogging"
         ];
         const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
-        let redirectIndex = 0;
 
         function getRedirectIndex() {
-            let index = localStorage.getItem('redirectIndex');
-            if (index !== null) {
-                return parseInt(index);
-            }
-            return 0;
+            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
+            return index;
         }
 
         function setRedirectIndex(index) {
             localStorage.setItem('redirectIndex', index);
         }
 
+        function clearRedirectIndex() {
+            localStorage.removeItem('redirectIndex');
+        }
+
         function redirectToNextLink() {
-            redirectIndex = getRedirectIndex();
-            if (redirectIndex < adLinks.length) {
-                setRedirectIndex(redirectIndex + 1);
-                window.location.href = adLinks[redirectIndex];
+            let index = getRedirectIndex();
+            if (index < adLinks.length) {
+                setRedirectIndex(index + 1);
+                window.location.href = adLinks[index];
             } else {
-                setRedirectIndex(0);
+                clearRedirectIndex();
                 window.location.href = telegramLink;
             }
         }
 
         window.onload = function() {
-            // Show landing page message
             document.getElementById('message').innerText = 'Wait for redirect...';
-            
-            // Check referrer to ensure it's not one of the ad links
-            if (document.referrer && !adLinks.some(link => document.referrer.includes(link))) {
-                setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
-            }
+            setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
         };
     </script>
 </head>
