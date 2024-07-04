@@ -51,6 +51,7 @@
         function redirectToNextLink() {
             let index = getRedirectIndex();
             if (index < adLinks.length) {
+                setRedirectIndex(index + 1); // Increment index before redirecting
                 window.location.href = adLinks[index];
             } else {
                 clearRedirectIndex();
@@ -66,10 +67,11 @@
         window.onload = function() {
             window.onpageshow = function(event) {
                 if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                    let index = getRedirectIndex();
-                    index += 1;  // Move to the next ad link
-                    setRedirectIndex(index);
-                    redirectToNextLink();
+                    // Check if referrer is an ad link
+                    let referrer = document.referrer;
+                    if (referrer && adLinks.some(link => referrer.includes(link))) {
+                        redirectToNextLink(); // Redirect to the next ad link
+                    }
                 }
             };
         };
