@@ -4,26 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auto Redirect</title>
-    <style>
-        body, html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-        }
-        #message {
-            font-size: 24px;
-            text-align: center;
-        }
-        button {
-            display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 18px;
-        }
-    </style>
     <script>
         const adLinks = [
             "https://www.gaumon.com",
@@ -35,15 +15,12 @@
         const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
 
         function getRedirectIndex() {
-            return parseInt(localStorage.getItem('redirectIndex')) || 0;
+            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
+            return index;
         }
 
         function setRedirectIndex(index) {
             localStorage.setItem('redirectIndex', index);
-        }
-
-        function clearRedirectIndex() {
-            localStorage.removeItem('redirectIndex');
         }
 
         function redirectToNextLink() {
@@ -52,30 +29,24 @@
                 setRedirectIndex(index + 1);
                 window.location.href = adLinks[index];
             } else {
-                clearRedirectIndex();
+                setRedirectIndex(0);
                 window.location.href = telegramLink;
             }
         }
 
-        function startRedirection() {
-            setRedirectIndex(0);  // Start from the first ad link
+        function handleJoinButton() {
+            setRedirectIndex(0);
             redirectToNextLink();
         }
 
         window.onload = function() {
-            let index = getRedirectIndex();
-            if (document.referrer && adLinks.some(link => document.referrer.includes(link))) {
+            if (document.referrer && document.referrer !== location.href) {
                 redirectToNextLink();
             }
-            // Ensure back button redirects to the next ad link
-            window.onpopstate = function() {
-                redirectToNextLink();
-            };
         };
     </script>
 </head>
 <body>
-    <div id="message">Welcome! Click the button below to join.</div>
-    <button onclick="startRedirection()">Join</button>
+    <button onclick="handleJoinButton()">Join</button>
 </body>
 </html>
