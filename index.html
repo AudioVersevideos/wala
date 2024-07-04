@@ -3,19 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landing Page</title>
+    <title>Auto Redirect</title>
     <script>
-        function redirectToRedirectPage() {
-            setTimeout(function() {
-                window.location.href = "redirect.html";
-            }, 1000); // Redirect after 3 seconds
+        const adLinks = [
+            "https://www.gaumon.com",
+            "https://www.gaumon.com/search/label/Freelancing",
+            "https://www.gaumon.com/search/label/Ecom",
+            "https://www.gaumon.com/search/label/Affiliate",
+            "https://www.gaumon.com/search/label/Blogging"
+        ];
+        const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
+
+        function getRedirectIndex() {
+            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
+            return index;
         }
 
-        window.onload = redirectToRedirectPage;
+        function setRedirectIndex(index) {
+            localStorage.setItem('redirectIndex', index);
+        }
+
+        function clearRedirectIndex() {
+            localStorage.removeItem('redirectIndex');
+        }
+
+        function redirectToNextLink() {
+            let index = getRedirectIndex();
+            if (index < adLinks.length) {
+                setRedirectIndex(index + 1);
+                window.location.href = adLinks[index];
+            } else {
+                clearRedirectIndex();
+                window.location.href = telegramLink;
+            }
+        }
+
+        function startRedirection() {
+            setRedirectIndex(0);  // Reset index at the start
+            redirectToNextLink();
+        }
+
+        function disableBackButton() {
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+            };
+        }
+
+        window.onload = function() {
+            disableBackButton(); // Disable back button functionality
+
+            // This ensures that when the user comes back from an ad, they will be redirected again.
+            if (performance.navigation.type === 2) {
+                redirectToNextLink();
+            }
+        };
     </script>
 </head>
 <body>
     <h1>Welcome to the landing page!</h1>
-    <p>Wait for redirect...</p>
+    <button onclick="startRedirection()">Join</button>
 </body>
 </html>
