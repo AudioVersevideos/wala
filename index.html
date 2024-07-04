@@ -38,7 +38,15 @@
             }
         }
 
+        function disableBackButton() {
+            history.pushState(null, null, location.href);
+            window.onpopstate = function () {
+                history.go(1);
+            };
+        }
+
         window.onload = function() {
+            disableBackButton(); // Disable back button functionality
             document.getElementById('message').innerText = 'Wait for redirect...';
             setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
         };
