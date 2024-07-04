@@ -39,22 +39,26 @@
         }
 
         function startRedirection() {
-            setRedirectIndex(0);  // Reset index at the start
             redirectToNextLink();
         }
 
         window.onload = function() {
-            // This ensures that when the user comes back from an ad, they will be redirected again.
-            window.onpageshow = function(event) {
-                if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                    redirectToNextLink();
-                }
-            };
+            document.getElementById('message').innerText = 'Wait for redirect...';
+            let index = getRedirectIndex();
+            if (index > 0 && index <= adLinks.length) {
+                setTimeout(redirectToNextLink, 1000); // Redirect after 1 seconds
+            }
+        };
+
+        window.onpageshow = function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                startRedirection();
+            }
         };
     </script>
 </head>
 <body>
-    <h1>Welcome to the landing page!</h1>
+    <h1 id="message">Welcome to the landing page!</h1>
     <button onclick="startRedirection()">Join</button>
 </body>
 </html>
