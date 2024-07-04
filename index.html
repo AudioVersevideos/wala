@@ -50,6 +50,13 @@
             document.getElementById('message').innerText = 'Wait for redirect...';
             setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
         };
+
+        window.onpageshow = function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                // Page was accessed via back button, redirect again
+                redirectToNextLink();
+            }
+        };
     </script>
 </head>
 <body>
