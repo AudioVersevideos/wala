@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auto Redirect</title>
+    <script>
+        const adLinks = [
+            "https://www.gaumon.com",
+            "https://www.gaumon.com/search/label/Freelancing",
+            "https://www.gaumon.com/search/label/Ecom",
+            "https://www.gaumon.com/search/label/Affiliate",
+            "https://www.gaumon.com/search/label/Blogging"
+        ];
+        const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
+
+        function getRedirectIndex() {
+            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
+            return index;
+        }
+
+        function setRedirectIndex(index) {
+            localStorage.setItem('redirectIndex', index);
+        }
+
+        function clearRedirectIndex() {
+            localStorage.removeItem('redirectIndex');
+        }
+
+        function redirectToNextLink() {
+            let index = getRedirectIndex();
+            if (index < adLinks.length) {
+                setRedirectIndex(index + 1);
+                window.location.href = adLinks[index];
+            } else {
+                clearRedirectIndex();
+                window.location.href = telegramLink;
+            }
+        }
+
+        window.onload = function() {
+            document.getElementById('message').innerText = 'Wait for redirect...';
+            setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
+        };
+
+        window.onpageshow = function(event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                // Page was accessed via back button, redirect again
+                redirectToNextLink();
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1 id="message">Welcome to the redirect page!</h1>
+</body>
+</html>
