@@ -13,61 +13,43 @@
             "https://www.gaumon.com/search/label/Blogging"
         ];
         const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
+        let redirectIndex = 0;
 
         function getRedirectIndex() {
-            let index = parseInt(getCookie('redirectIndex')) || 0;
-            return index;
+            let index = localStorage.getItem('redirectIndex');
+            if (index !== null) {
+                return parseInt(index);
+            }
+            return 0;
         }
 
         function setRedirectIndex(index) {
-            setCookie('redirectIndex', index, 1);
-        }
-
-        function getCookie(name) {
-            let cookieArr = document.cookie.split(';');
-            for (let i = 0; i < cookieArr.length; i++) {
-                let cookiePair = cookieArr[i].split('=');
-                if (name === cookiePair[0].trim()) {
-                    return decodeURIComponent(cookiePair[1]);
-                }
-            }
-            return null;
-        }
-
-        function setCookie(name, value, days) {
-            let date = new Date();
-            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-            let expires = "; expires=" + date.toUTCString();
-            document.cookie = name + "=" + value + expires + "; path=/";
-        }
-
-        function deleteCookie(name) {
-            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+            localStorage.setItem('redirectIndex', index);
         }
 
         function redirectToNextLink() {
-            let index = getRedirectIndex();
-            if (index < adLinks.length) {
-                setRedirectIndex(index + 1);
-                window.location.href = adLinks[index];
+            redirectIndex = getRedirectIndex();
+            if (redirectIndex < adLinks.length) {
+                setRedirectIndex(redirectIndex + 1);
+                window.location.href = adLinks[redirectIndex];
             } else {
-                // Clear the cookie when redirecting to the Telegram link
                 setRedirectIndex(0);
                 window.location.href = telegramLink;
-                deleteCookie('redirectIndex');
             }
         }
 
         window.onload = function() {
-            let index = getRedirectIndex();
-            if (document.referrer && document.referrer.includes(adLinks[index - 1])) {
-                redirectToNextLink();
-            } else if (index < adLinks.length) {
-                redirectToNextLink();
+            // Show landing page message
+            document.getElementById('message').innerText = 'Wait for redirect...';
+            
+            // Check referrer to ensure it's not one of the ad links
+            if (document.referrer && !adLinks.some(link => document.referrer.includes(link))) {
+                setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
             }
         };
     </script>
 </head>
 <body>
+    <h1 id="message">Welcome to the landing page!</h1>
 </body>
 </html>
