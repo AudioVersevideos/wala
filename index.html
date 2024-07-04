@@ -15,8 +15,7 @@
         const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
 
         function getRedirectIndex() {
-            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
-            return index;
+            return parseInt(localStorage.getItem('redirectIndex')) || 0;
         }
 
         function setRedirectIndex(index) {
@@ -39,21 +38,20 @@
         }
 
         function startRedirection() {
+            setRedirectIndex(0);  // Start from the first ad link
             redirectToNextLink();
         }
 
         window.onload = function() {
-            document.getElementById('message').innerText = 'Wait for redirect...';
             let index = getRedirectIndex();
-            if (index > 0 && index <= adLinks.length) {
-                setTimeout(redirectToNextLink, 1000); // Redirect after 1 seconds
+            // Redirect to next link only if coming back from an ad
+            if (document.referrer && adLinks.some(link => document.referrer.includes(link))) {
+                redirectToNextLink();
             }
-        };
-
-        window.onpageshow = function(event) {
-            if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                startRedirection();
-            }
+            // Prevent going back to Telegram
+            window.onpopstate = function() {
+                history.go(1);
+            };
         };
     </script>
 </head>
