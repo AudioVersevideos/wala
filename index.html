@@ -41,14 +41,20 @@
             document.cookie = name + "=" + value + expires + "; path=/";
         }
 
+        function deleteCookie(name) {
+            document.cookie = name + "=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
         function redirectToNextLink() {
             let index = getRedirectIndex();
             if (index < adLinks.length) {
                 setRedirectIndex(index + 1);
                 window.location.href = adLinks[index];
             } else {
+                // Clear the cookie when redirecting to the Telegram link
                 setRedirectIndex(0);
                 window.location.href = telegramLink;
+                deleteCookie('redirectIndex');
             }
         }
 
