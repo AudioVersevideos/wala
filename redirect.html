@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Redirect</title>
+    <title>Redirect Page</title>
     <script>
         const adLinks = [
             "https://www.gaumon.com",
@@ -39,19 +39,18 @@
         }
 
         window.onload = function() {
-            document.getElementById('message').innerText = 'Wait for redirect...';
-            setTimeout(redirectToNextLink, 3000); // Redirect after 3 seconds
+            redirectToNextLink();
         };
 
         window.onpageshow = function(event) {
             if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
-                // Page was accessed via back button, redirect to index.html
-                window.location.href = 'index.html';
+                // Page was accessed via back button, redirect again
+                redirectToNextLink();
             }
         };
     </script>
 </head>
 <body>
-    <h1 id="message">Welcome to the redirect page!</h1>
+    <h1>Redirecting...</h1>
 </body>
 </html>
