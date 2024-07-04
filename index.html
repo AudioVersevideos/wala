@@ -38,7 +38,7 @@
         }
 
         function startRedirection() {
-            setRedirectIndex(0);  // Start from the first ad link
+            setRedirectIndex(0);  // Reset index at the start
             redirectToNextLink();
         }
 
@@ -48,10 +48,12 @@
             if (document.referrer && adLinks.some(link => document.referrer.includes(link))) {
                 redirectToNextLink();
             }
-            // Prevent going back to Telegram
-            window.onpopstate = function() {
-                history.go(1);
-            };
+        };
+
+        window.onpopstate = function() {
+            // Prevent going back to previous pages and keep user in the redirection loop
+            history.pushState(null, null, location.href);
+            redirectToNextLink();
         };
     </script>
 </head>
