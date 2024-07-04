@@ -3,7 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Auto Redirect</title>
+    <title>Unlock Private Telegram Channel</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+        iframe { width: 100%; height: 500px; border: none; }
+        .message { margin-top: 20px; }
+    </style>
     <script>
         const adLinks = [
             "https://www.gaumon.com",
@@ -12,61 +17,27 @@
             "https://www.gaumon.com/search/label/Affiliate",
             "https://www.gaumon.com/search/label/Blogging"
         ];
-        const telegramLink = 'https://t.me/+-XUA4RsJz4hlNWNl';
-        const landingPage = 'index.html';
+        const destinationLink = "https://t.me/+-XUA4RsJz4hlNWNl";
+        let clickCount = 0;
 
-        function getRedirectIndex() {
-            let index = parseInt(localStorage.getItem('redirectIndex')) || 0;
-            return index;
-        }
-
-        function setRedirectIndex(index) {
-            localStorage.setItem('redirectIndex', index);
-        }
-
-        function clearRedirectIndex() {
-            localStorage.removeItem('redirectIndex');
-        }
-
-        function redirectToNextLink() {
-            let index = getRedirectIndex();
-            if (index < adLinks.length) {
-                setRedirectIndex(index + 1);
-                window.location.href = adLinks[index];
+        function showNextAd() {
+            if (clickCount < adLinks.length) {
+                document.getElementById('adFrame').src = adLinks[clickCount];
+                clickCount++;
+                setTimeout(showNextAd, 3000); // Switch to the next ad every 3 seconds
             } else {
-                clearRedirectIndex();
-                window.location.href = telegramLink;
+                window.location.href = destinationLink;
             }
         }
 
-        function startRedirection() {
-            setRedirectIndex(0);  // Reset index at the start
-            redirectToNextLink();
-        }
-
-        function handleBackButton() {
-            if (performance.navigation.type === 2) {
-                redirectToNextLink();
-            }
-        }
-
-        function init() {
-            disableBackButton(); // Disable back button functionality
-            handleBackButton(); // Handle redirection on back navigation
-        }
-
-        function disableBackButton() {
-            history.pushState(null, null, location.href);
-            window.onpopstate = function () {
-                window.location.href = landingPage;
-            };
-        }
-
-        window.onload = init;
+        window.onload = function() {
+            showNextAd();
+        };
     </script>
 </head>
 <body>
-    <h1>Welcome to the landing page!</h1>
-    <button onclick="startRedirection()">Join</button>
+    <h1>Loading ads, please wait...</h1>
+    <iframe id="adFrame" src=""></iframe>
+    <p class="message">Once all ads are viewed, you will be redirected to the private Telegram channel.</p>
 </body>
 </html>
