@@ -23,30 +23,38 @@
             localStorage.setItem('redirectIndex', index);
         }
 
+        function clearRedirectIndex() {
+            localStorage.removeItem('redirectIndex');
+        }
+
         function redirectToNextLink() {
             let index = getRedirectIndex();
             if (index < adLinks.length) {
                 setRedirectIndex(index + 1);
                 window.location.href = adLinks[index];
             } else {
-                setRedirectIndex(0);
+                clearRedirectIndex();
                 window.location.href = telegramLink;
             }
         }
 
-        function handleJoinButton() {
-            setRedirectIndex(0);
+        function startRedirection() {
+            setRedirectIndex(0);  // Reset index at the start
             redirectToNextLink();
         }
 
         window.onload = function() {
-            if (document.referrer && document.referrer !== location.href) {
-                redirectToNextLink();
-            }
+            // This ensures that when the user comes back from an ad, they will be redirected again.
+            window.onpageshow = function(event) {
+                if (event.persisted || (window.performance && window.performance.navigation.type == 2)) {
+                    redirectToNextLink();
+                }
+            };
         };
     </script>
 </head>
 <body>
-    <button onclick="handleJoinButton()">Join</button>
+    <h1>Welcome to the landing page!</h1>
+    <button onclick="startRedirection()">Join</button>
 </body>
 </html>
